@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="hanoiTower.css">
+</head>
+<body>
+    <div class="game_area">
+        <div class="game_sub_area">
+            <div class="level_picker">
+                <button class="btn_increase_level" id="increase_level">Increase Level</button>  
+                <p class="" id="difficulty_level"></p>      
+                <button class="btn_decrease_level" id="decrease_level">Decrease Level</button>
+            </div>
+            <div class = "towers_set">
+                <div class="tower tower_1_style" id="tower_1">
+                    <div class="stack">
+                        <img src="arts/default/rod_top.png" class="rod rod_top_1" id="rt1">
+                        <div class="disks_stack" id="disks_tower_1"></div>
+                    </div>                                        
+                    <img src="arts/default/rod_bottom.png" class="rod rod_bottom_1" id="rb1">
+                </div>
+                <div class="tower tower_2_style" id="tower_2">
+                    <div class="stack">
+                        <img src="arts/default/rod_top.png" class="rod rod_top_2" id="rt2">
+                        <div class="disks_stack" id="disks_tower_2"></div>
+                    </div>                                        
+                    <img src="arts/default/rod_bottom.png" class="rod rod_bottom_2" id="rb2">
+                </div>
+                <div class="tower tower_3_style" id="tower_3">
+                    <div class="stack">
+                        <img src="arts/default/rod_top.png" class="rod rod_top_3" id="rt3">
+                        <div class="disks_stack" id="disks_tower_3"></div>
+                    </div>                                        
+                    <img src="arts/default/rod_bottom.png" class="rod rod_bottom_3" id="rb3">
+                </div>        
+            </div>        
+        </div>    
+        <div class="moves">Moves: <span id="moves_count"></span></div>
+    </div>
+    
+    <script src="hanoiTower.js" defer></script>
+</body>
+</html>

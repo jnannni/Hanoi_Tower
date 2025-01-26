@@ -1,0 +1,148 @@
+body {
+    margin: 0;
+    height: 100vh;           
+}
+
+.game_area {
+    margin: 0 60px 0 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: aquamarine;    
+}
+
+.game_sub_area {   
+    width: 100%;
+    margin-bottom: 30px;         
+    display: flex;
+    flex-direction: row;    
+    justify-content: space-between;
+}
+
+.towers_set {
+    position: relative;
+    border: 1px solid pink;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 1040px;
+    height: 490px;    
+       
+}
+
+.tower {   
+    position: relative;
+    overflow: hidden; 
+    display: flex;
+    align-items: center;
+    width: 290px;
+    height: 480px;
+}
+
+.tower_1_style, .tower_2_style, .tower_3_style {
+    display: flex;
+    flex-direction: column;       
+    background-color: pink; 
+}
+
+.stack {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+}
+
+.rod_2, .rod_3 {
+    width: 30%;
+    height: auto;
+}
+
+.rod_top_1, .rod_top_2, .rod_top_3 {
+    position: absolute;
+    bottom: 0;    
+    max-width: 10%;
+    height: auto;
+    display: block;
+}
+
+.rod_bottom_1, .rod_bottom_2, .rod_bottom_3 {
+    max-width: 70%;
+    display: block;
+}
+
+.disks_stack {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.disks_stack {
+    
+}
+
+.disk_1 {
+    width: 60%;
+}
+
+.disk_2 {
+    width: 55%;
+}
+
+.disk_3 {
+    width: 50%;
+}
+
+.disk_4 {
+    width: 45%;
+}
+
+.disk_5 {
+    width: 40%;
+}
+
+.disk_6 {
+    width:35%;
+}
+
+/*.disks_stack_style img:nth-last-child(1) {
+    width: 50%;
+    height: auto;
+}
+
+.disks_stack_style img:nth-last-child(2) {
+    width: 45%;
+    height: auto;
+}
+
+.disks_stack_style img:nth-last-child(3) {
+    width: 40%;
+    height: auto;
+}
+
+.disks_stack_style img:nth-last-child(4) {
+    width: 35%;
+    height: auto;
+}
+
+.disks_stack_style img:nth-last-child(5) {
+    width: 30%;
+    height: auto;
+}
+
+.disks_stack_style img:nth-last-child(6) {
+    width: 25%;
+    height: auto;
+}*/
+
+.level_picker {
+    display: flex;
+    flex-direction: column;
+}
+
+.moves {
+    align-self: flex-end;
+}
