@@ -1,5 +1,6 @@
 import { saveToLeaderboard, getPlayerRank } from "./leaderboard.js";
 import { select_sound, navigation_sound, win_sound, playSound } from "./audio.js";
+import { displayRules } from "./rules.js";
 
 export let game_state = {
     towers: [[1, 2, 3], [], []],
@@ -144,6 +145,11 @@ function startingState() {
     setDifficultyLevel();
     createTower();
     updateMoveCount();
+    if (!ui_state.open_rules && overlay) {
+        overlay.classList.remove("hidden");
+        ui_state.open_rules = !ui_state.open_rules;
+        displayRules();
+    }
 }
 
 function gameStart() {

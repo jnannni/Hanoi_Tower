@@ -5,13 +5,10 @@ const overlay = document.getElementById("overlay");
 const rules_wrapper = document.getElementById("rules_wrapper");
 const rules = document.getElementById("rules");
 const close_rules = document.getElementById("close_rules");
-console.log(rules_btn);
 rules_btn === null || rules_btn === void 0 ? void 0 : rules_btn.addEventListener("click", () => {
-    console.log("hi");
     if (!ui_state.open_rules && overlay && rules) {
         playSound(select_sound);
         overlay.classList.remove("hidden");
-        rules.style.display = "flex";
         ui_state.open_rules = !ui_state.open_rules;
         displayRules();
     }
@@ -24,8 +21,9 @@ close_rules === null || close_rules === void 0 ? void 0 : close_rules.addEventLi
         overlay.classList.add("hidden");
     }
 });
-function displayRules() {
-    if (rules_wrapper) {
+export function displayRules() {
+    if (rules_wrapper && rules) {
+        rules.style.display = "flex";
         rules_wrapper.innerHTML = `<h3>Rules</h3>                    
                             <ul>
                                 <li>Move all the disks from the starting tower to the last tower in the fewest moves possible;</li>
