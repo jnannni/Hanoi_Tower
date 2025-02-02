@@ -1,5 +1,5 @@
 # Tower of Hanoi
-A web-based version of a famous "Tower of Hanoi" game (primary focus on keyboard controls). My main goal was to refresh my coding skills/memory and to do something new. I had fun trying some pixel art for the first time, and I plan to keep doing it. Here are some examples of me trying to make some stone texture (a background sprite and a button container):
+A web-based version of a famous "Tower of Hanoi" game (primary focus on keyboard controls; Vanilla JavaScript). My main goal was to refresh my coding skills/memory and to do something new. I had fun trying pixel art for the first time and I plan to keep doing it. Here are some examples of me trying to make some stone texture (a background sprite and a button container):
 
 ![pixel art sprite 1](arts/stone_wall_sprite.png)
 
