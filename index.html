@@ -3,44 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Just+Another+Hand">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Document</title>
     <link rel="stylesheet" href="hanoiTower.css">
 </head>
 <body>
-    <div class="game_area">
-        <div class="game_sub_area">
-            <div class="level_picker">
-                <button class="btn_increase_level" id="increase_level">Increase Level</button>  
-                <p class="" id="difficulty_level"></p>      
-                <button class="btn_decrease_level" id="decrease_level">Decrease Level</button>
-            </div>
-            <div class = "towers_set">
-                <div class="tower tower_1_style" id="tower_1">
-                    <div class="stack">
-                        <img src="arts/default/rod_top.png" class="rod rod_top_1" id="rt1">
-                        <div class="disks_stack" id="disks_tower_1"></div>
-                    </div>                                        
-                    <img src="arts/default/rod_bottom.png" class="rod rod_bottom_1" id="rb1">
-                </div>
-                <div class="tower tower_2_style" id="tower_2">
-                    <div class="stack">
-                        <img src="arts/default/rod_top.png" class="rod rod_top_2" id="rt2">
-                        <div class="disks_stack" id="disks_tower_2"></div>
-                    </div>                                        
-                    <img src="arts/default/rod_bottom.png" class="rod rod_bottom_2" id="rb2">
-                </div>
-                <div class="tower tower_3_style" id="tower_3">
-                    <div class="stack">
-                        <img src="arts/default/rod_top.png" class="rod rod_top_3" id="rt3">
-                        <div class="disks_stack" id="disks_tower_3"></div>
-                    </div>                                        
-                    <img src="arts/default/rod_bottom.png" class="rod rod_bottom_3" id="rb3">
-                </div>        
-            </div>        
-        </div>    
-        <div class="moves">Moves: <span id="moves_count"></span></div>
+    <div class="hidden" id="overlay"></div>
+    <div class="wall_container"></div>
+    <div class="leaderboard_layout" id="leaderboard">
+        <div class="levels_switch">
+            <button class="level_switch focus" id="3_level">difficulty 3</button>
+            <button class="level_switch" id="4_level">difficulty 4</button>
+            <button class="level_switch" id="5_level">difficulty 5</button>
+            <button class="level_switch" id="6_level">difficulty 6</button>
+        </div>
+        <div id="leaderboard_results"></div>
+        <button id="close_leaderboard"><span class="material-icons">close</span></button>
+    </div>
+    <div class="rules_layout" id="rules">
+        <button id="close_rules"><span class="material-icons">close</span></button>
+        <div class="rules_wrapper" id="rules_wrapper"></div>
+    </div>
+    <div class="board">
+        <div class="navigation">
+            <div class="leaderboard_button button" id="leaderboard_btn"><p>leaderboard</p></div>
+            <div class="rules_button button" id="rules_btn">rules</div>
+        </div>
+        <div class="game_area">
+            <div class="game_sub_area">
+                <div class="game_options" id="options">
+                    <div class="level_picker">
+                        <div class="icon_container"><span class="material-icons" id="increase_level">expand_less</span></div>                
+                        <div class="difficulty_count"><p id="difficulty_level"></p></div>     
+                        <div class="icon_container"><span class="material-icons" id="decrease_level">expand_more</span></div>                
+                    </div>
+                    <div>
+                        <button id="restart">Restart</button>
+                    </div>
+                </div>            
+                <div class = "towers_set">
+                    <canvas id="canvas"></canvas>
+                    <p class="instruction_to_start" id="instruction">press [space] to start</p>
+                    <div class="tower tower_1_style" id="tower_1">
+                        <div class="stack">
+                            <img src="arts/default/rod_top.png" class="rod rod_top_1" id="rt1">
+                            <div class="disks_stack" id="disks_tower_1"></div>
+                        </div>                                        
+                        <img src="arts/default/rod_bottom.png" class="rod rod_bottom_1" id="rb1">
+                    </div>
+                    <div class="tower tower_2_style" id="tower_2">
+                        <div class="stack">
+                            <img src="arts/default/rod_top.png" class="rod rod_top_2" id="rt2">
+                            <div class="disks_stack" id="disks_tower_2"></div>
+                        </div>                                        
+                        <img src="arts/default/rod_bottom.png" class="rod rod_bottom_2" id="rb2">
+                    </div>
+                    <div class="tower tower_3_style" id="tower_3">
+                        <div class="stack">
+                            <img src="arts/default/rod_top.png" class="rod rod_top_3" id="rt3">
+                            <div class="disks_stack" id="disks_tower_3"></div>
+                        </div>                                        
+                        <img src="arts/default/rod_bottom.png" class="rod rod_bottom_3" id="rb3">
+                    </div>        
+                </div> 
+                <div class="start_button_wrapper"><button class="enter_game" id="enter_game_btn">Start</button></div>
+            </div>   
+            <div class="player_parameters">
+                <div><span id="stopwatch">00:00</span></div>
+                <div class="moves">Moves: <span id="moves_count"></span></div>
+            </div>                      
+        </div>
+        <div class="game_win hidden" id="win_alert">
+            <h4 style="margin: 0 0;">You Win!</h4>
+            <div id="win_message"></div>
+            <button id="restart_2">Restart</button>            
+        </div>
     </div>
     
-    <script src="hanoiTower.js" defer></script>
+    <script>var exports = {};</script>
+    <script type="module" src="dist/hanoiTower.js" defer></script>        
+    <script type="module" src="dist/leaderboard.js" defer></script>
+    <script type="module" src="dist/rules.js" defer></script>
+    <script type="module" src="dist/audio.js" defer></script>   
+    <script src="dist/canvas.js"></script>
 </body>
 </html>

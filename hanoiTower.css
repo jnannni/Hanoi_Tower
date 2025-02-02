@@ -1,33 +1,160 @@
 body {
     margin: 0;
-    height: 100vh;           
+    height: 100vh;
+    font-family: 'Just Another Hand', sans-serif; 
+    font-size: 35px;
+    text-transform: lowercase;
+    position: relative; 
+    overflow: hidden; 
+    background-color: #827F77;  
 }
 
-.game_area {
-    margin: 0 60px 0 60px;
+p {    
+    margin: 0;
+}
+
+h3, h4, h5 { 
+    margin: 10px;
+}
+
+#overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #00000050;    
+    z-index: 2;
+}
+
+.wall_container {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background-image: url('arts/stone_wall_sprite.png');
+    background-repeat: repeat; /* Tile the sprite */
+    background-size: 200px 200px; /* Adjust size if needed */
+    z-index: -1;
+}
+
+.wall_containe::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-image: url('arts/stone_wall_sprite.png');
+    background-repeat: repeat;
+    background-size: 200px 200px;
+}
+
+.button, button {
+    font-size: 30px;
+    font-family: 'Just Another Hand', sans-serif;
+    cursor: pointer;
+    text-transform: lowercase;
+    background-color: #659492;
+    color: #F9F9F9;
+    border-radius: 60px;
+    border: none;
+    transition: 0.3s;
+}
+
+.button:hover, button:hover {
+    transform: scale(1.1);     
+}
+
+.icon_container {
+    width: fit-content;
+    line-height: 0;  
+}
+
+.material-icons {    
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.starting_state {
+    margin: auto;
+    flex: 1;  
+    width: 100%;
+    height: auto;
+}
+
+.board {
+    height: 100%;    
+    margin: 0 60px;
+    display: flex;
+    flex-direction: column;    
+}
+
+.navigation {    
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.navigation div {
+    margin-top: 60px;
+    margin-left: 10px;
+    text-align: center;
+    padding: 10px 30px;
+}
+
+.game_area {    
+    height: 100%;    
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-    background-color: aquamarine;    
 }
 
 .game_sub_area {   
     width: 100%;
     margin-bottom: 30px;         
     display: flex;
-    flex-direction: row;    
-    justify-content: space-between;
+    flex-direction: row;   
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between; 
 }
 
-.towers_set {
-    position: relative;
+.game_options {    
+    height: calc(80% - 40px);
+    width: 150px;
+    padding: 40px 40px;    
+    background-color: #9D9990;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.towers_set {  
+    position: relative;    
     border: 1px solid pink;
     display: flex;
     flex-direction: row;
-    align-items: center;
-    width: 1040px;
-    height: 490px;    
-       
+    justify-content: center;
+    align-items: flex-end;
+    border: 20px solid #747064; 
+    border-radius: 20px;   
+    width: 880px;
+    height: 510px;          
+}
+
+#canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background-image: url("arts/window_landscape.png");
+    background-size: 100%;
+    background-position: 50% 50%;
 }
 
 .tower {   
@@ -36,13 +163,12 @@ body {
     display: flex;
     align-items: center;
     width: 290px;
-    height: 480px;
+    height: 480px;    
 }
 
 .tower_1_style, .tower_2_style, .tower_3_style {
     display: flex;
-    flex-direction: column;       
-    background-color: pink; 
+    flex-direction: column;           
 }
 
 .stack {
@@ -108,41 +234,238 @@ body {
     width:35%;
 }
 
-/*.disks_stack_style img:nth-last-child(1) {
-    width: 50%;
-    height: auto;
+.start_button_wrapper {
+    position: absolute;    
+    transform: translate(-50%, -50%);
+    top: 82%;
+    left: 50%;
+    z-index: 1;
 }
 
-.disks_stack_style img:nth-last-child(2) {
-    width: 45%;
-    height: auto;
+.enter_game { 
+    width: 200px;
+    height: 70px;   
+    font-size: 50px;
+    border-radius: 0;
+    background-image: url("arts/button.png"); 
+    background-size:contain;    
 }
 
-.disks_stack_style img:nth-last-child(3) {
-    width: 40%;
-    height: auto;
+#restart {
+    width: 150px;
+    padding: 10px 0;
+    text-align: center;
+    border-radius: 0;
+    background-image: url("arts/button.png"); 
+    background-size: cover; 
 }
 
-.disks_stack_style img:nth-last-child(4) {
-    width: 35%;
-    height: auto;
-}
-
-.disks_stack_style img:nth-last-child(5) {
-    width: 30%;
-    height: auto;
-}
-
-.disks_stack_style img:nth-last-child(6) {
-    width: 25%;
-    height: auto;
-}*/
-
-.level_picker {
+.level_picker {    
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
-.moves {
+.difficulty_count {
+    width: 130px;
+    height: 70px;
+    border-radius: 60px;
+    border: 3px solid #37332A;
+    background-color: #F9F9F9;
+    color: #37332A;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.difficulty_count p {
+    font-size: 25px;    
+}
+
+.player_parameters {
+    color: #F9F9F9;
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: row;
+    width: 200px;
+    justify-content: space-between;    
     align-self: flex-end;
+    border-radius: 0;
+    background-image: url("arts/button.png"); 
+    background-size: cover; 
+}
+.player_parameters div {
+    padding: 0;
+}
+
+.moves {    
+}
+
+.instruction_to_start {
+    position: absolute;
+    top: 110%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    font-size: 25px;
+    color: #F9F9F9;
+}
+
+.leaderboard_button, .rules_button {
+    cursor: pointer;  
+    border-radius: 0;
+    background-image: url("arts/button.png"); 
+    background-size: cover; 
+}
+
+.leaderboard_layout, .rules_layout {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    background-color: #D9D9D9;
+    width: 800px;
+    height: 600px;
+    z-index: 2;
+    flex-direction: column;
+    align-items: center;    
+}
+
+.levels_switch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.level_switch {
+    padding: 10px 20px;
+    margin-top: -25px;
+    background-color: #D9D9D9;
+}
+
+.level_switch:hover {
+    color:#37332A;
+    background-color: #D9D9D9;
+    transform: scale(1);
+}
+
+.focus {
+    color:#37332A;
+}
+
+#leaderboard_results {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    justify-content: flex-start;
+}
+
+.leaderboard_result {
+    display: flex;
+    flex-direction: row;
+}
+
+.leaderboard_result p {
+    min-width: 150px;
+    margin-right: 50px;
+}
+
+#close_leaderboard, #close_rules {
+    position: absolute;
+    top: 0;
+    right: 0;    
+    padding: 10px 20px;
+    margin-top: -25px;
+    border-radius: 30px;
+    background-color: #D9D9D9;
+}
+
+#close_leaderboard:hover, #close_rules:hover {
+    transform: scale(1);
+    color: #37332A;
+}
+
+.rules_layout {
+    justify-content: center;
+}
+
+.rules_layout ul {
+    margin: 5px 0;
+}
+
+.game_win {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    width: 400px;
+    height: 200px;
+    border-radius: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #659492;
+    padding: 30px 20px;
+    z-index: 2;
+}
+
+.game_win button {
+    background-color: #F9F9F9;
+    color: #659492;
+    width: 100px;
+    height: 40px;
+}
+
+.message {
+    flex: 2;
+}
+
+.controls_description {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.keyboard_controls, .mouse_controls {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+}
+
+.hidden {
+    display: none;
+}
+
+@media screen and (min-width: 1440px) {
+    .towers_set {
+        width: 1040px;
+        height: auto;
+    }
+}
+
+@media screen and (min-width: 1920px) {
+    body { 
+        font-size: 50px;
+    }
+
+    .board {
+        margin: 0 120px;
+    }
+
+    .game_options {       
+        padding: 40px 80px;        
+    }
+
+    .towers_set {
+        width: 1260px;
+        height: 600px;
+    }    
 }
