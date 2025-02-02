@@ -7,4 +7,4 @@ A web-based version of a famous "Tower of Hanoi" game (primary focus on keyboard
 
 Animations and some arts (canvas background, towers and its disks, wrappers for text and options) are still in progress.
 
-[Check Tower of Hanoi out] (https://jnannni.github.io/Hanoi_Tower/)
+[Check Tower of Hanoi out](https://jnannni.github.io/Hanoi_Tower/)
