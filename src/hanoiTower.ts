@@ -2,6 +2,7 @@ import { saveToLeaderboard, getPlayerRank } from "./leaderboard.js";
 import { select_sound, navigation_sound, win_sound, playSound } from "./audio.js";
 import { displayRules } from "./rules.js";
 
+// game state stores the current (!) state of the game parameters
 export let game_state = {
     towers: [[1, 2, 3], [], []],
     moves: 0,
@@ -16,17 +17,17 @@ export let game_state = {
     },
 };
 
+// state used fot opening/closing floating elements (leaderboard, rules)
 export const ui_state = {
     open_rules: false,
     open_leaderboard: false,
 };
 
-const winnning_condition: number[] = [1, 2, 3];
-let tower_index: number = 0; // stores the index of the currently selected tower, 1st tower is a default tower (0)
-// const default_game_state = {...game_state}; - it copies only top level 
-const default_game_state = JSON.parse(JSON.stringify(game_state));
+const winnning_condition = [1, 2, 3];
+let tower_index = 0; // stores the index of the currently selected tower, 1st tower is a default tower (0)
+const default_game_state = JSON.parse(JSON.stringify(game_state)); // saves the game state at the beginning of the game
 let interval: number | NodeJS.Timeout;
-let prev_index: number = 0;
+let prev_index = 0;
 
 const overlay = document.getElementById("overlay");
 const instruction = document.getElementById("instruction");
@@ -41,19 +42,19 @@ const win_alert = document.getElementById("win_alert");
 
 startingState();
 
+// shows the layout after entering the game, basically a switch to a game state
 enter_game?.addEventListener("click", () => {
     playSound(select_sound);
     const game_options = document.getElementById("options");
     enter_game.style.display = "none";
-    if (game_options) {
-        if (game_options && game_options.parentElement && instruction) {
-            instruction.style.display = "block";
-            game_options.parentElement.style.justifyContent = "space-between";
-            game_options.style.display = "flex";
-        }
+    if (game_options && game_options.parentElement && instruction) {
+        instruction.style.display = "block";
+        game_options.parentElement.style.justifyContent = "space-between";
+        game_options.style.display = "flex";
     }
 })
 
+// increase difficulty level/number of disks on the road
 increase_btn?.addEventListener("click", () => {
     if (game_state.difficulty_level < 6) {
         playSound(navigation_sound);
@@ -63,6 +64,7 @@ increase_btn?.addEventListener("click", () => {
     }
 });
 
+// decrease difficulty level/number of disks on the road
 decrease_btn?.addEventListener("click", () => {
     if (game_state.difficulty_level > 3) {
         playSound(navigation_sound);
@@ -72,69 +74,96 @@ decrease_btn?.addEventListener("click", () => {
     }
 });
 
+// restart the game and reset the game parameteres to their default state (difficulty level, moves count, timer)
 restart_btn?.addEventListener("click", () => {
     playSound(select_sound);
     gameRestart();
     restart_btn.blur();
 });
 
+// restart the game after winning and reset the game parameteres to their default state (difficulty level, moves count, timer)
 restart_btn_2?.addEventListener("click", () => {
     playSound(select_sound);
     gameRestart();
     restart_btn_2.blur();
 });
 
-// event listener for keyboard controls
-document.addEventListener("keydown", (e) => { 
-    let current_stack = document.getElementById(`disks_tower_${tower_index+1}`);
-    let prev_stack = document.getElementById(`disks_tower_${game_state.selected_tower_index+1}`);   
+// event listener for keyboard controls (right, left, space)
+document.addEventListener("keydown", (e) => {   
     if (e.key === "ArrowLeft" && game_state.is_game_started) {
-        if (tower_index > 0) {            
-            playSound(navigation_sound);
-            prev_index = tower_index; // remember the tower before the new hovered one to remove styles
-            tower_index--;                        
-            navigateToTheTower();
-        }
+        leftArrowControl();
     } else if (e.key === "ArrowRight" && game_state.is_game_started) {
-        if (tower_index < 2) {
-            playSound(navigation_sound);
-            prev_index = tower_index;
-            tower_index++;                      
-            navigateToTheTower();                                
-        }
+        rightArrowControl();
     } else if (e.key === " " && game_state.is_game_started) {
         if (game_state.is_tower_selected) {
-            playSound(select_sound);
-            game_state.moves++;                                  
-            moveDisk(game_state.selected_tower_index, tower_index);                        
-            updateMoveCount();
-            if (prev_stack?.hasChildNodes())  {                 
-                for (let i = prev_stack.childElementCount; i > 0; i--) {
-                    const child = prev_stack.children[i-1] as HTMLImageElement;                            
-                    if (child instanceof HTMLImageElement) {  
-                        console.log(child);                              
-                        child.src = `arts/default/${child.classList[1].slice(-1)}.png`;
-                    }
-                }
-            }
+            makeMove();
         } else if (game_state.towers[tower_index].length !== 0) { 
-            playSound(select_sound);                           
-            if (current_stack?.hasChildNodes())  {                 
-                for (let i = current_stack.childElementCount; i > 0; i--) {
-                    const child = current_stack.children[i-1] as HTMLImageElement;                            
-                    if (child instanceof HTMLImageElement) {                                                       
-                        child.src = `arts/hover/${child.classList[1].slice(-1)}.png`;
-                    }
-                }
-            }
-            game_state.is_tower_selected = !game_state.is_tower_selected;
-            game_state.selected_tower_index = tower_index;            
+            changeImgToHover();            
         }
     } else if ((e.key === " " && !game_state.is_game_started)) {                        
         gameStart();
     }
 });
 
+// control of the left arrow, move to the left when pressed
+function leftArrowControl() {
+    if (tower_index > 0) {            
+        playSound(navigation_sound);
+        prev_index = tower_index; // remember the tower before the new hovered one to remove styles
+        tower_index--;                        
+        navigateToTheTower();
+    }
+}
+
+// control of the right arrow, move to the right when pressed
+function rightArrowControl() {
+    if (tower_index < 2) {
+        playSound(navigation_sound);
+        prev_index = tower_index;
+        tower_index++;                      
+        navigateToTheTower();                                
+    }
+}
+
+// make a move by updating move count and moving the top disk to a chosen tower 
+function makeMove() {        
+    playSound(select_sound);
+    game_state.moves++;                                  
+    moveDisk(game_state.selected_tower_index, tower_index);                        
+    updateMoveCount();    
+}
+
+// change disks' images to default state when the tower is not selected
+function changeImgToDefault() {
+    const prev_stack = document.getElementById(`disks_tower_${game_state.selected_tower_index+1}`); 
+    if (prev_stack?.hasChildNodes())  {                 
+        for (let i = prev_stack.childElementCount; i > 0; i--) {
+            const child = prev_stack.children[i-1] as HTMLImageElement;                            
+            if (child instanceof HTMLImageElement) {  
+                console.log(child);                              
+                child.src = `arts/default/${child.classList[1].slice(-1)}.png`;
+            }
+        }
+    }
+}
+
+// change disks' images to hover state when the tower is selected
+function changeImgToHover() {
+    const current_stack = document.getElementById(`disks_tower_${tower_index+1}`);
+    playSound(select_sound);                           
+    if (current_stack?.hasChildNodes())  {                 
+        for (let i = current_stack.childElementCount; i > 0; i--) {
+            const child = current_stack.children[i-1] as HTMLImageElement;                            
+            if (child instanceof HTMLImageElement) {                                                       
+                child.src = `arts/hover/${child.classList[1].slice(-1)}.png`;
+            }
+        }
+    }
+    game_state.is_tower_selected = !game_state.is_tower_selected;
+    game_state.selected_tower_index = tower_index;
+}
+
+// set the starting state for the game
 function startingState() {    
     const game_options = document.getElementById("options");   
     if (game_options && game_options.parentElement && instruction) {
@@ -152,6 +181,7 @@ function startingState() {
     }
 }
 
+// starts the game and its counters (moves, timer) itself
 function gameStart() {
     const starting_tower_top = document.getElementById("rt1") as HTMLImageElement;
     const starting_tower_bottom = document.getElementById("rb1") as HTMLImageElement;
@@ -171,8 +201,8 @@ function gameStart() {
 
 // create the body for the starting tower with n-disks
 function createTower() {
-    let disk_stacks = document.getElementsByClassName("disks_stack");
-    let currentelement = document.getElementById("disks_tower_1"); 
+    const disk_stacks = document.getElementsByClassName("disks_stack");
+    const currentelement = document.getElementById("disks_tower_1"); 
     if (disk_stacks) {
         for (let i = 0; i < disk_stacks.length; i++) {
             disk_stacks[i].innerHTML = '';
@@ -186,8 +216,7 @@ function createTower() {
 }
 
 // update towers' state when a disk is moved
-function updateTower(from_tower: HTMLElement, to_tower: HTMLElement, from: number, to: number) {
-    const disk = from_tower.children[0];
+function updateTower(from_tower: HTMLElement, to_tower: HTMLElement, from: number, to: number) {    
     from_tower.children[0].remove();    
     to_tower.innerHTML = '';
     for (let i = game_state.towers[to].length; i > 0; i--) {           
@@ -214,13 +243,12 @@ function setDifficultyLevel() {
     }    
 }
 
-// select a tower with keys on a keyboard, REDO
+// select a tower with keys on a keyboard and change rods' state from hover to default accroding to current tower index
 function navigateToTheTower() {    
     const hover_tower_top = document.getElementById(`rt${tower_index+1}`) as HTMLImageElement;
     const hover_tower_bottom = document.getElementById(`rb${tower_index+1}`) as HTMLImageElement;
     const prev_tower_top = document.getElementById(`rt${prev_index+1}`) as HTMLImageElement;
     const prev_tower_bottom = document.getElementById(`rb${prev_index+1}`) as HTMLImageElement;    
-    console.log();
     if (game_state.is_game_started && hover_tower_top && hover_tower_bottom && prev_tower_bottom && prev_tower_top) {
         
         hover_tower_top.src = "arts/hover/rod_top.png";
@@ -230,13 +258,16 @@ function navigateToTheTower() {
     }    
 }
 
+// move disks: both img elements and a number in array
 function moveDisk(from: number, to: number) {    
-    let currentelement = document.getElementById(`disks_tower_${from+1}`);
-    let move_to = document.getElementById(`disks_tower_${to+1}`);    
+    const currentelement = document.getElementById(`disks_tower_${from+1}`);
+    const move_to = document.getElementById(`disks_tower_${to+1}`);    
     if (currentelement && move_to) {
         if (game_state.towers[from][game_state.towers[from].length-1] > game_state.towers[to][game_state.towers[to].length-1] || game_state.towers[to].length === 0) {            
-            const removed_disk: any = game_state.towers[from].pop();                        
-            game_state.towers[to].push(removed_disk);            
+            const removed_disk = game_state.towers[from].pop();  
+            if (removed_disk) {
+                game_state.towers[to].push(removed_disk);  
+            }                                            
             game_state.is_tower_selected = !game_state.is_tower_selected;
             updateTower(currentelement, move_to, from, to);
             reachGoal();            
@@ -244,6 +275,7 @@ function moveDisk(from: number, to: number) {
     }
 }
 
+// checks if the winning condition is reached
 function reachGoal () {
     const win_message = document.getElementById("win_message");
     if (game_state.towers[game_state.towers.length-1].every((e, i) => e === winnning_condition[i]) 
@@ -263,6 +295,7 @@ function reachGoal () {
     }        
 }
 
+// updates the text content of a div according to moves counter
 function updateMoveCount() {    
     const current_element = document.getElementById("moves_count");
     if (current_element) {
@@ -270,13 +303,14 @@ function updateMoveCount() {
     }
 }
 
+// updates the text content for a timer
 function updateTime() {
     if (stopwatch) {
         stopwatch.textContent = "00:00";
     }
 }
 
-
+// reset the game parameters to its default state & changes visibility for html elements
 function gameRestart() {
     clearInterval(interval);
     game_state = JSON.parse(JSON.stringify(default_game_state));     

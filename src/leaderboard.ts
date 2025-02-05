@@ -1,4 +1,4 @@
-import {ui_state, game_state} from "./hanoiTower.js";
+import {ui_state} from "./hanoiTower.js";
 import { select_sound, playSound } from "./audio.js";
 
 type LeaderboardState = {
@@ -12,6 +12,7 @@ const leaderboard_res = document.getElementById("leaderboard_results");
 const close_leaderboard = document.getElementById("close_leaderboard");
 const overlay = document.getElementById("overlay");
 
+// detects if any of the level buttons are clicked
 leaderboard?.addEventListener("click", (event) => { 
     const buttons = document.querySelectorAll(".level_switch");      
     const button = event.target as HTMLElement;    
@@ -25,6 +26,7 @@ leaderboard?.addEventListener("click", (event) => {
     }        
 });
 
+// open a leaderboard with default display of difficulty level 3
 leaderboard_btn?.addEventListener("click", () => {    
     const buttons = document.querySelectorAll(".level_switch");     
     buttons[0].classList.add("focus");
@@ -37,6 +39,7 @@ leaderboard_btn?.addEventListener("click", () => {
     }
 });
 
+// close leaderboard
 close_leaderboard?.addEventListener("click", () => {    
     if (leaderboard && ui_state.open_leaderboard && overlay) {
         playSound(select_sound); 
@@ -46,6 +49,7 @@ close_leaderboard?.addEventListener("click", () => {
     }    
 });
 
+// save the result to a leaderboard
 export function saveToLeaderboard(level: number, score: number) {
      const leaderboard_results: LeaderboardState[] = JSON.parse(localStorage.getItem("results") || "[]");
      leaderboard_results.push({level, score});
@@ -53,11 +57,13 @@ export function saveToLeaderboard(level: number, score: number) {
      localStorage.setItem("results", JSON.stringify(leaderboard_results));
 }
 
+// returns leaderboard data
 function getLeaderboard(level: number): LeaderboardState[] {
     const leaderboard_results: LeaderboardState[] = JSON.parse(localStorage.getItem("results") || "[]");
     return leaderboard_results.filter(e => e.level === level).splice(0, 25);
 }
 
+// checks a player rank in comparison to other entries on leaderboard
 export function getPlayerRank(player_moves: number, level: number): number {
     const leaderboard_results = getLeaderboard(level);
     return leaderboard_results.filter(e => e.score <= player_moves).length;
